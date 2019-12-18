@@ -11,7 +11,7 @@ import './styles/index.less'
 
 Vue.config.productionTip = false
 
-Vue.ues(ElementUI)
+Vue.use(ElementUI)
 
 new Vue({
   router,
