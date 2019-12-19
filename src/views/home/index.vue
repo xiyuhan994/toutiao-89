@@ -38,38 +38,49 @@ export default {
       loginRules: {
         mobile: [
           { required: true, message: '请输入手机号' },
-          { pattern: /^1[3456789]\d{9}$/, message: '手机号格式正确' }
+          { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确' }
         ],
         code: [
           { required: true, message: '请输入手机号' },
-          { pattern: /^\d{6}$/, message: '验证码格式正确' }
+          { pattern: /^\d{6}$/, message: '验证码格式不正确' }
         ],
         // rule当前规则
         logCheck: [
           {
             validator: function (rule, value, callback) {
-            // 用value来进行校验
-            // 如果成功往下执行
+              // 用value来进行校验
+              // 如果成功往下执行
               if (value) {
                 callback()
               } else {
-              // 校验不通过
+                // 校验不通过
                 callback(new Error('请先同意'))
               }
             }
           }
         ]
       }
-
     }
   },
   methods: {
     // 提交登陆
     sumbitLogin () {
       // el-form实例 validate方法 里有两个参数 1是否校验成功 未校验成功的字段
-      this.$refs.myForm.validate(function (isOK) {
+      this.$refs.myForm.validate(isOK => {
         if (isOK) {
-          console.log('校验成功')
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginForm
+          })
+            .then(res => {
+              console.log(res)
+              // 把令牌存起来
+              window.localStorage.setItem('user-token', res.data.data.token)
+            })
+            .catch(error => {
+              console.log(error)
+            })
         }
       })
     }

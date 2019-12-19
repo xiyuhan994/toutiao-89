@@ -18,10 +18,9 @@ Vue.config.productionTip = false
 // 注册事件
 Vue.use(ElementUI)
 // 赋值默认的黑马头条的地址
-axios.defaults.baseURL('http://ttapi.research.itcast.cn/mp/v1_0')
+axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 // 赋值给全局属性
 Vue.prototype.$axios = axios
-Vue.use(axios)
 
 new Vue({
   router,
