@@ -13,7 +13,13 @@ import './styles/index.less'
 // 引入axios
 import axios from 'axios'
 
+// 引入组件
+import component from './components/index'
+
 Vue.config.productionTip = false
+
+// 注册全局组件
+Vue.use(component)
 
 // 注册事件
 Vue.use(ElementUI)
