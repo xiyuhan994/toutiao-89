@@ -12,14 +12,14 @@
           <!-- 添加图片 -->
         <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt />
 
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
             {{userInfo.name}}
           </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item>Git地址</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-menu  slot="dropdown">
+            <el-dropdown-item command="info" >个人信息</el-dropdown-item>
+            <el-dropdown-item command="git" >Git地址</el-dropdown-item>
+            <el-dropdown-item command="exit" >退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
        </el-row>
@@ -50,6 +50,17 @@ export default {
       // 获取个人信息
       this.userInfo = res.data.data
     })
+  },
+  methods: {
+    handleCommand (a) {
+      if (a === 'exit') {
+        //   清除用户的令牌
+        window.localStorage.removeItem('user-token')
+        this.$router.push('/login')
+      } else if (a === 'git') {
+        window.location.href = 'https://github.com/xiyuhan994/toutiao-89/commits/master'
+      }
+    }
   }
 }
 </script>
