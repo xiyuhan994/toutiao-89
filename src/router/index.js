@@ -4,6 +4,9 @@ import Home from '../views/home'
 // 引入登陆页面
 import Login from '../views/login'
 
+// 引入二级容器
+import Home2 from '../views/home/home'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,7 +19,11 @@ const routes = [
     // 主页
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    children: [{
+      path: '',
+      component: Home2
+    }]
   },
 
   {
