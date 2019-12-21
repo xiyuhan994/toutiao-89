@@ -16,6 +16,9 @@ import axios from 'axios'
 // 引入组件
 import component from './components/index'
 
+// 引入守卫
+import './permisson/index'
+
 Vue.config.productionTip = false
 
 // 注册全局组件

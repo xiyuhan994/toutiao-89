@@ -101,7 +101,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-image: url("../../assets/img/login_bg.jpg");
-  min-height: 100vh;
+  height: 100vh;
   background-size: cover;
 
   .login-card {
