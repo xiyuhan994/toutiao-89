@@ -76,7 +76,7 @@ export default {
             .then(res => {
               console.log(res)
               // 把令牌存起来
-              window.localStorage.setItem('user-token', res.data.data.token)
+              window.localStorage.setItem('user-token', res.data.token)
               // 跳转页面
               this.$router.push('/home')
             })

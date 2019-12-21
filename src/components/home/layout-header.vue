@@ -42,7 +42,7 @@ export default {
       url: '/user/profile'
     }).then(res => {
       // 获取个人信息
-      this.userInfo = res.data.data
+      this.userInfo = res.data
     })
   },
   methods: {
