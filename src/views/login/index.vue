@@ -80,13 +80,13 @@ export default {
               // 跳转页面
               this.$router.push('/home')
             })
-            .catch(error => {
-              console.log(error)
-              this.$message({
-                message: '验证码或手机号不正确',
-                type: 'warning'
-              })
-            })
+            // .catch(error => {
+            //   console.log(error)
+            //   this.$message({
+            //     message: '验证码或手机号不正确',
+            //     type: 'warning'
+            //   })
+            // })
         }
       })
     }
