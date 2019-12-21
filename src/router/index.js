@@ -7,6 +7,9 @@ import Login from '../views/login'
 // 引入二级容器
 import Home2 from '../views/home/home'
 
+// 引入二级容器
+import Comment from '../views/comment'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -20,10 +23,17 @@ const routes = [
     path: '/home',
     name: 'home',
     component: Home,
-    children: [{
-      path: '',
-      component: Home2
-    }]
+    children: [
+      {
+        path: '',
+        component: Home2
+      },
+      {
+        // 二级路由可以写相对地址
+        path: 'comment',
+        component: Comment
+      }
+    ]
   },
 
   {
