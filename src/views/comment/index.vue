@@ -1,20 +1,53 @@
 <template>
   <el-card>
     <bread-crumb slot="header">
-      <template slot="title"></template>
+      <template slot="title">评论列表</template>
     </bread-crumb>
-    <el-table style="width: 100%">
-      <el-table-column label="标题" width="600"></el-table-column>
-      <el-table-column label="评论状态" ></el-table-column>
-      <el-table-column label="总评论数"></el-table-column>
-      <el-table-column label="粉丝评论数"></el-table-column>
-      <el-table-column label="操作" ></el-table-column>
+    <el-table style="width: 100%" :data="list">
+      <!-- 格式化内容 -->
+      <el-table-column prop="title" label="标题" width="600"></el-table-column>
+      <el-table-column :formatter="formatterBool"  prop="comment_status" label="评论状态"></el-table-column>
+      <el-table-column prop="total_comment_count" label="总评论数"></el-table-column>
+      <el-table-column prop="fans_comment_count" label="粉丝评论数"></el-table-column>
+      <!-- 文字按钮 -->
+      <el-table-column label="操作">
+          <template slot-scope="obj">
+          <el-button type="text">修改</el-button>
+          <el-button type="text">{{obj.row.comment_status ? '关闭评论':'打开评论'}}</el-button>
+      </template>
+      </el-table-column>
     </el-table>
   </el-card>
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      list: []
+    }
+  },
+  methods: {
+    getComment () {
+      this.$axios({
+        url: '/articles',
+        params: { response_type: 'comment' }
+      }).then(res => {
+        // 获取评论表给data
+        // console.log(res)
+        this.list = res.data.results
+      })
+    },
+    // 定义一个布尔值的转化方法
+    // 当前行数据 当前列属性 当前单元格值 当前下标
+    formatterBool (row, column, cellValue, index) {
+      return cellValue ? '正常' : '关上'
+    }
+  },
+  created () {
+    this.getComment()
+  }
+}
 </script>
 
 <style>
