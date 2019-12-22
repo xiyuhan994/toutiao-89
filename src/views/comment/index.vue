@@ -46,20 +46,25 @@ export default {
 
     openOnClose (row) {
       // 获取状态
+      console.log(row)
       var mess = row.comment_status ? '关闭' : '打开'
       this.$confirm(`您是否要${mess}评论吗`).then(() => {
         // 调用接口
         // 地址参数
+        console.log('aaa')
+
         this.$axios({
-          url: 'comments/status',
+          url: '/comments/status',
           method: 'put',
           params: {
-            article_id: row.id
+            article_id: row.id.toString()
           },
           data: {
-            article_comment: !row.comment_status
+            allow_comment: !row.comment_status
           }
         }).then(result => {
+          console.log(result)
+
           // 打开或者关闭评论成功以后
           this.$message({
             type: 'success',
@@ -68,6 +73,12 @@ export default {
           // 重新请求列表
           this.getComment()
         })
+        // .catch(() => {
+        //   this.$message({
+        //     type: 'error',
+        //     message: '操作失败'
+        //   })
+        // })
       })
     }
   },
