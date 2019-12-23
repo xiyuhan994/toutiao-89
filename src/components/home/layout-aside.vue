@@ -43,7 +43,7 @@
 export default {}
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .img {
   background-color: #2e2f32;
   text-align: center;
