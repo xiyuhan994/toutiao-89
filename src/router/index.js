@@ -7,9 +7,6 @@ import Login from '../views/login'
 // 引入二级容器
 import Home2 from '../views/home/home'
 
-// 引入二级容器
-import Comment from '../views/comment'
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,9 +26,14 @@ const routes = [
         component: Home2
       },
       {
-        // 二级路由可以写相对地址
+        // 二级路由可以写相对地址 // 引入评论列表二级容器
         path: 'comment',
-        component: Comment
+        component: () => import('../views/comment')
+      },
+      // 引入素材管理二级容器
+      {
+        path: 'material',
+        component: () => import('../views/material')
       }
     ]
   },
