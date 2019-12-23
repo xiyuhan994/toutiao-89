@@ -13,10 +13,24 @@
       <el-table-column label="操作">
         <template slot-scope="obj">
           <el-button type="text">修改</el-button>
-          <el-button type="text" @click='openOnClose(obj.row)'>{{obj.row.comment_status ? '关闭评论':'打开评论'}}</el-button>
+          <el-button
+            type="text"
+            @click="openOnClose(obj.row)"
+          >{{obj.row.comment_status ? '关闭评论':'打开评论'}}</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页效果 -->
+    <el-row type="flex" justify="center" style="height:80px" align="middle">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="page.total"
+        :page-size="page.pageSizes"
+        :current-page="page.currentPage"
+        @current-change='changePage'
+      ></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -24,18 +38,41 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        // 总页数
+        total: 1000,
+        // 一页有多少条评论
+        pageSizes: 10,
+        // 默认在第几页
+        currentPage: 1
+
+      }
     }
   },
   methods: {
+
+    // 改变获取每页的内容
+
+    changePage (newPage) {
+      // 修改当前页码
+      this.page.currentPage = newPage
+      // 更新 每页的内容
+      this.getComment()
+    },
+
     getComment () {
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: {
+          response_type: 'comment',
+          page: this.page.currentPage,
+          per_page: this.page.pageSizes }
       }).then(res => {
         // 获取评论表给data
         // console.log(res)
         this.list = res.data.results
+        this.page.total = res.data.total_count
       })
     },
     // 定义一个布尔值的转化方法
