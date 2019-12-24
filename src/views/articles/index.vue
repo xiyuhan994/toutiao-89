@@ -64,16 +64,17 @@
       <span>共找到1000条符合条件的内容</span>
     </el-row>
 
-    <el-row v-for="item in 100" :key='item.id' class="content" type='flex' justify='space-between'>
+    <el-row v-for="item in list" :key='item.id.toString()' class="content" type='flex' justify='space-between'>
 
       <!-- 左边部分 -->
       <el-col  :span='12'>
         <el-row type='flex'>
-          <img class="picture" src="../../assets/img/header.jpg" alt="">
+          <img class="picture" :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt="">
           <div class="info">
-              <span>我是黑马</span>
-              <el-tag style="width:60px">已发表</el-tag>
-              <span class="date">2019-12-24 22.26.59</span>
+              <span>{{item.title}}</span>
+              <!-- 过滤器可以在差值表达式中使用 还有v-bind -->
+              <el-tag :type='item.status | filterType' style="width:60px">{{item.status | filterStatus}}</el-tag>
+              <span class="date">{{item.pubdate}}</span>
           </div>
         </el-row>
       </el-col>
@@ -104,10 +105,60 @@ export default {
         dateRange: []
       },
       // 定义一个空数组
-      channels: []
+      channels: [],
+      list: [],
+      defaultImg: require('../../assets/img/header.jpg')
     }
   },
+
+  filters: {
+    // 过滤器
+    filterStatus (value) {
+      // vaule是过滤器前面表达式计算得到的值
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+
+        default:
+          break
+      }
+    },
+    filterType (value) {
+      // vaule是过滤器前面表达式计算得到的值
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return ''
+        case 3:
+          return 'danger'
+
+        default:
+          break
+      }
+    }
+  },
+
   methods: {
+
+    // 获取文章列表
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(res => {
+        this.list = res.data.results
+      })
+    },
+
+    // 获取频道
     getChannels () {
       this.$axios({
         url: '/channels'
@@ -119,6 +170,8 @@ export default {
   },
   created () {
     this.getChannels()
+    // 获取文章列表
+    this.getArticles()
   }
 }
 </script>
