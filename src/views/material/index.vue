@@ -3,12 +3,14 @@
     <bread-crumb slot="header">
       <template slot="title">素材管理</template>
     </bread-crumb>
+
     <!-- 上传图片 -->
     <el-row type='flex' justify='end'>
-      <el-upload :http-request='uploadImg' :show-file-list='false'>
+      <el-upload :http-request='uploadImg' action='' :show-file-list='false'>
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
     </el-row>
+
     <!-- 素材 -->
     <el-tabs v-model="activeName" @tab-click="chageTab">
       <!-- 全部素材 -->
@@ -17,6 +19,7 @@
         <div class="imgList">
           <el-card class="card" v-for="item in list" :key="item.id">
             <img :src="item.url" alt />
+
             <!-- 小图标 -->
             <el-row
               class="row"
@@ -25,12 +28,26 @@
               style="height:50px;background:#f4f4f4"
               align="middle"
             >
-              <i class="el-icon-star-on left" id="star"></i>
-              <i class="el-icon-delete-solid right"></i>
+
+            <!-- 根据状态收藏状态 -->
+              <i  @click="collectImg(item)" :style="{color:item.is_collected ? 'red':''}" class="el-icon-star-on left" id="star"></i>
+            <!-- 删除图片 -->
+              <i @click="deleteImg(item.id)" class="el-icon-delete-solid right"></i>
             </el-row>
           </el-card>
         </div>
       </el-tab-pane>
+
+      <!-- 收藏素材 -->
+      <el-tab-pane  label="收藏" name="collect">
+        <!-- 循环图片 -->
+        <div class="imgList">
+          <el-card class="card" v-for="item in list" :key="item.id">
+            <img :src="item.url" alt />
+          </el-card>
+        </div>
+      </el-tab-pane>
+
       <!-- 分页 -->
       <el-row type="flex" justify="center">
         <el-pagination
@@ -42,15 +59,7 @@
           :page-size="page.pageSize"
         ></el-pagination>
       </el-row>
-      <!-- 收藏素材 -->
-      <el-tab-pane label="收藏" name="collect">
-        <!-- 循环图片 -->
-        <div class="imgList">
-          <el-card class="card" v-for="item in list" :key="item.id">
-            <img :src="item.url" alt />
-          </el-card>
-        </div>
-      </el-tab-pane>
+
     </el-tabs>
   </el-card>
 </template>
@@ -71,6 +80,35 @@ export default {
     }
   },
   methods: {
+
+    // 图片删除
+    deleteImg (id) {
+      this.$confirm('您确定要删除吗').then(() => {
+        // 删除图片接口
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+        // 更新
+          this.getAllimg()
+        })
+      })
+    },
+
+    // 图片收藏
+    collectImg (row) {
+      this.$axios({
+        url: `/user/images/${row.id}`,
+        method: 'put',
+        data: {
+          // 状态取反 收藏改取消
+          collect: !row.is_collected
+        }
+      }).then(() => {
+        // 重新加载数据
+        this.getAllimg()
+      })
+    },
 
     // 上传图片
     uploadImg (params) {
@@ -143,6 +181,7 @@ export default {
       i {
         font-size: 20px;
         width: 95px;
+        cursor: pointer;
       }
     }
   }
