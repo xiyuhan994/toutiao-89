@@ -1,9 +1,14 @@
 <template>
-  <el-card>
+  <el-card v-loading='loading'>
     <bread-crumb slot="header">
       <template slot="title">素材管理</template>
     </bread-crumb>
-
+    <!-- 上传图片 -->
+    <el-row type='flex' justify='end'>
+      <el-upload :http-request='uploadImg' :show-file-list='false'>
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
+    </el-row>
     <!-- 素材 -->
     <el-tabs v-model="activeName" @tab-click="chageTab">
       <!-- 全部素材 -->
@@ -27,8 +32,15 @@
         </div>
       </el-tab-pane>
       <!-- 分页 -->
-      <el-row type='flex' justify='center' >
-            <el-pagination background layout="prev, pager, next" @current-change='changePage' :total="page.total" :current-page='page.currentPage' :page-size='page.pageSize'></el-pagination>
+      <el-row type="flex" justify="center">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          @current-change="changePage"
+          :total="page.total"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+        ></el-pagination>
       </el-row>
       <!-- 收藏素材 -->
       <el-tab-pane label="收藏" name="collect">
@@ -47,6 +59,7 @@
 export default {
   data () {
     return {
+      loading: false,
       activeName: 'all',
       list: [],
       page: {
@@ -58,6 +71,24 @@ export default {
     }
   },
   methods: {
+
+    // 上传图片
+    uploadImg (params) {
+      this.loading = true
+      // alert(1)
+      let fd = new FormData()
+      fd.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: fd
+      }).then(res => {
+        // 上传成功
+        this.loading = false
+        this.getAllimg()
+      })
+    },
+
     // 获取分页数据
     changePage (newPage) {
       // 得到最新页面
@@ -73,7 +104,11 @@ export default {
     getAllimg () {
       this.$axios({
         url: '/user/images',
-        params: { collect: this.activeName === 'collect', per_page: this.page.pageSize, page: this.page.currentPage }
+        params: {
+          collect: this.activeName === 'collect',
+          per_page: this.page.pageSize,
+          page: this.page.currentPage
+        }
       }).then(res => {
         this.list = res.data.results
         this.page.total = res.data.total_count
