@@ -34,6 +34,11 @@ const routes = [
       {
         path: 'material',
         component: () => import('../views/material')
+      },
+      // 引入内容列表二级容器
+      {
+        path: 'articles',
+        component: () => import('../views/articles')
       }
     ]
   },
