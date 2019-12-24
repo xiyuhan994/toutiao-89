@@ -88,8 +88,8 @@ export default {
         this.$axios({
           url: `/user/images/${id}`,
           method: 'delete'
-        }).then(() => {
-        // 更新
+        }).then().catch(() => {
+          // 更新
           this.getAllimg()
         })
       })
