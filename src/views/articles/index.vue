@@ -12,7 +12,7 @@
 
       <el-col :span="18">
           <!-- {{formData.status}} -->
-        <el-radio-group v-model="formData.status">
+        <el-radio-group @change="chageCondition" v-model="formData.status">
           <el-radio :label="5">全部</el-radio>
           <el-radio :label="0">草稿</el-radio>
           <el-radio :label="1">待审核</el-radio>
@@ -29,7 +29,7 @@
       </el-col>
 
       <el-col :span="18">
-        <el-select v-model="formData.channelId" placeholder="请选择">
+        <el-select @change="chageCondition" v-model="formData.channelId" placeholder="请选择">
             <!-- value是存储值 lable是名字 -->
           <el-option v-for="item in channels" :key="item.id"
             :label="item.name"
@@ -48,6 +48,8 @@
       <el-col :span="18">
         <div class="block">
           <el-date-picker
+          @change="chageCondition"
+          value-format='yyyy-MM-dd'
             v-model="formData.dateRange"
             type="daterange"
             range-separator="-"
@@ -58,6 +60,7 @@
         </div>
       </el-col>
     </el-row>
+    <!-- {{this.formData.dateRange}} -->
 
     <!--显示内容-->
     <el-row class="count" >
@@ -100,6 +103,7 @@ export default {
   data () {
     return {
       formData: {
+        // 状态默认选中
         status: 5,
         channelId: null,
         dateRange: []
@@ -149,10 +153,26 @@ export default {
 
   methods: {
 
+    // 改变条件
+    chageCondition () {
+      // 组装条件
+      // 最新状态
+      // alert(this.formData.status)
+      let params = {
+        status: this.formData.status === 5 ? null : this.formData.status,
+        channel_id: this.formData.channelId,
+        begin_pubdate: this.formData.dateRange.length ? this.formData.dateRange[0] : null,
+        end_pubdate: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null
+      }
+      // 更新
+      this.getArticles(params)
+    },
+
     // 获取文章列表
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params // es6写法
       }).then(res => {
         this.list = res.data.results
       })
@@ -172,6 +192,8 @@ export default {
     this.getChannels()
     // 获取文章列表
     this.getArticles()
+
+    this.chageCondition()
   }
 }
 </script>
