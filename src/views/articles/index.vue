@@ -98,7 +98,7 @@
             <i class="el-icon-edit"></i>
             修改
           </span>
-          <span class="del">
+          <span @click="delArticle(item.id)" class="del">
             <i class="el-icon-delete"></i>
             删除
           </span>
@@ -180,6 +180,24 @@ export default {
   },
 
   methods: {
+
+    // 删除评论
+    delArticle (id) {
+      this.$confirm('您确定要删除吗').then(() => {
+        this.$axios({
+          url: `/articles/${id.toString()}`,
+          method: 'delete'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除文章成功'
+          })
+          // 重新调用
+          this.getConditionArticle()
+        })
+      })
+    },
+
     // 改变页码事件
     changePage (newPage) {
       // 赋值

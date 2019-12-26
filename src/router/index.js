@@ -39,6 +39,11 @@ const routes = [
       {
         path: 'articles',
         component: () => import('../views/articles')
+      },
+      // 发布文章
+      {
+        path: 'publish',
+        component: () => import('../views/publish')
       }
     ]
   },
