@@ -11,7 +11,7 @@
       </el-col>
 
       <el-col :span="18">
-          <!-- {{formData.status}} -->
+        <!-- {{formData.status}} -->
         <el-radio-group @change="chageCondition" v-model="formData.status">
           <el-radio :label="5">全部</el-radio>
           <el-radio :label="0">草稿</el-radio>
@@ -30,11 +30,8 @@
 
       <el-col :span="18">
         <el-select @change="chageCondition" v-model="formData.channelId" placeholder="请选择">
-            <!-- value是存储值 lable是名字 -->
-          <el-option v-for="item in channels" :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
+          <!-- value是存储值 lable是名字 -->
+          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -48,8 +45,8 @@
       <el-col :span="18">
         <div class="block">
           <el-date-picker
-          @change="chageCondition"
-          value-format='yyyy-MM-dd'
+            @change="chageCondition"
+            value-format="yyyy-MM-dd"
             v-model="formData.dateRange"
             type="daterange"
             range-separator="-"
@@ -63,38 +60,61 @@
     <!-- {{this.formData.dateRange}} -->
 
     <!--显示内容-->
-    <el-row class="count" >
-      <span>共找到1000条符合条件的内容</span>
+    <el-row class="count">
+      <span>共找到{{page.total}}条符合条件的内容</span>
     </el-row>
 
-    <el-row v-for="item in list" :key='item.id.toString()' class="content" type='flex' justify='space-between'>
-
+    <el-row
+      v-for="item in list"
+      :key="item.id.toString()"
+      class="content"
+      type="flex"
+      justify="space-between"
+    >
       <!-- 左边部分 -->
-      <el-col  :span='12'>
-        <el-row type='flex'>
-          <img class="picture" :src="item.cover.images.length ? item.cover.images[0] : defaultImg" alt="">
+      <el-col :span="12">
+        <el-row type="flex">
+          <img
+            class="picture"
+            :src="item.cover.images.length ? item.cover.images[0] : defaultImg"
+            alt
+          />
           <div class="info">
-              <span>{{item.title}}</span>
-              <!-- 过滤器可以在差值表达式中使用 还有v-bind -->
-              <el-tag :type='item.status | filterType' style="width:60px">{{item.status | filterStatus}}</el-tag>
-              <span class="date">{{item.pubdate}}</span>
+            <span>{{item.title}}</span>
+            <!-- 过滤器可以在差值表达式中使用 还有v-bind -->
+            <el-tag
+              :type="item.status | filterType"
+              style="width:60px"
+            >{{item.status | filterStatus}}</el-tag>
+            <span class="date">{{item.pubdate}}</span>
           </div>
         </el-row>
       </el-col>
 
       <!-- 右边部分 -->
-      <el-col :span='4'>
-        <el-row type='flex' justify='end'>
-            <span class="del">
+      <el-col :span="4">
+        <el-row type="flex" justify="end">
+          <span class="del">
             <i class="el-icon-edit"></i>
-            修改</span>
-            <span class="del">
-              <i class="el-icon-delete"></i>
-              删除</span>
+            修改
+          </span>
+          <span class="del">
+            <i class="el-icon-delete"></i>
+            删除
+          </span>
         </el-row>
       </el-col>
     </el-row>
 
+    <!-- 分页效果 -->
+    <el-row class="page" type='flex' justify='center' align='middle'>
+        <el-pagination background layout="prev, pager, next"
+        @current-change='changePage'
+        :total="page.total"
+        :current-page="page.currentPage"
+        :page-size="page.pageSize"
+        ></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -111,7 +131,15 @@ export default {
       // 定义一个空数组
       channels: [],
       list: [],
-      defaultImg: require('../../assets/img/header.jpg')
+      defaultImg: require('../../assets/img/header.jpg'),
+      // 分页
+      page: {
+        total: 0,
+        // 默认第几页
+        currentPage: 1,
+        // 一页几条数据
+        pageSize: 10
+      }
     }
   },
 
@@ -152,20 +180,24 @@ export default {
   },
 
   methods: {
+    // 改变页码事件
+    changePage (newPage) {
+      // 赋值
+      this.page.currentPage = newPage
+      this.getConditionArticle()
+    },
 
     // 改变条件
     chageCondition () {
+      // 强制将当前的页码回到第一页
+      this.page.currentPage = 1
+
       // 组装条件
       // 最新状态
       // alert(this.formData.status)
-      let params = {
-        status: this.formData.status === 5 ? null : this.formData.status,
-        channel_id: this.formData.channelId,
-        begin_pubdate: this.formData.dateRange.length ? this.formData.dateRange[0] : null,
-        end_pubdate: this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null
-      }
+
       // 更新
-      this.getArticles(params)
+      this.getConditionArticle()
     },
 
     // 获取文章列表
@@ -175,6 +207,8 @@ export default {
         params // es6写法
       }).then(res => {
         this.list = res.data.results
+        // 文章总数
+        this.page.total = res.data.total_count
       })
     },
 
@@ -186,6 +220,22 @@ export default {
         // console.log(res.data.channels)
         this.channels = res.data.channels
       })
+    },
+
+    getConditionArticle () {
+      let params = {
+        // 切换条件默认回到第一页
+        page: this.page.currentPage,
+        per_page: this.page.pageSize,
+        status: this.formData.status === 5 ? null : this.formData.status,
+        channel_id: this.formData.channelId,
+        begin_pubdate: this.formData.dateRange.length
+          ? this.formData.dateRange[0]
+          : null,
+        end_pubdate:
+          this.formData.dateRange.length > 1 ? this.formData.dateRange[1] : null
+      }
+      this.getArticles(params)
     }
   },
   created () {
@@ -194,6 +244,8 @@ export default {
     this.getArticles()
 
     this.chageCondition()
+
+    this.changePage()
   }
 }
 </script>
@@ -211,9 +263,9 @@ export default {
   }
 
   .content {
-     margin-bottom: 20px;
-     border-bottom: 1px solid #f2f3f5;
-     padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f2f3f5;
+    padding: 20px 0;
     .picture {
       height: 100px;
       width: 150px;
@@ -222,22 +274,25 @@ export default {
       margin-left: 20px;
       height: 100px;
       display: flex;
-      flex-direction:column;
+      flex-direction: column;
       justify-content: space-between;
 
       .date {
         color: #999;
-        font-size: 12px
+        font-size: 12px;
       }
     }
   }
   .del {
     margin-left: 5px;
     font-size: 13px;
-     i {
-    margin-left: 30px;
-  }
+    i {
+      margin-left: 30px;
+    }
   }
 
+  .page {
+    height: 50px
+  }
 }
 </style>
