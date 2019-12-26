@@ -27,8 +27,9 @@
               </el-select>
           </el-form-item>
           <el-form-item>
-              <el-button @click="publishArtcile" type='primary'>发布</el-button>
-              <el-button>进入草稿</el-button>
+              <el-button @click="publishArtcile()" type='primary'>发布</el-button>
+                <!-- true为草稿模式 -->
+              <el-button @click="publishArtcile(true)">进入草稿</el-button>
           </el-form-item>
       </el-form>
   </el-card>
@@ -73,11 +74,20 @@ export default {
       })
     },
     // 发布文章
-    publishArtcile () {
-      this.$refs.publishForm.validate(function (isOk) {
+    publishArtcile (draft) {
+      this.$refs.publishForm.validate((isOk) => {
         if (isOk) {
           // 发布接口调用
-          console.log('发布成功')
+        //   console.log('校验成功')
+          this.$axios({
+            url: '/articles',
+            method: 'post',
+            params: { draft }, // query参数
+            data: this.formData
+          }).then(() => {
+            // 新增成功 回到内容列表
+            this.$router.push('/home/articles')
+          })
         }
       })
     }
