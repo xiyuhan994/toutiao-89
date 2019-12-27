@@ -30,13 +30,12 @@ function () {
 // 后台数据 到达 响应拦截之前走的一个函数
 axios.defaults.transformResponse = [function (data) {
   // 替换原来的json.parse 保证数字正确
-  let result = JsonBig.parse(data)
-  return result
+  return data ? JsonBig.parse(data) : {}
 }]
 
 // 相应拦截
 axios.interceptors.response.use(function (response) {
-  return response.data ? response.data : {}
+  return response.data ? response.data : { }
 }, function (error) {
   let status = error.response.status
   let message = ''

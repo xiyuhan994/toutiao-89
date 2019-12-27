@@ -27,6 +27,7 @@
               </el-select>
           </el-form-item>
           <el-form-item>
+              <!-- 因为有默认参数 所有要加（）就是undifiend 就是flase -->
               <el-button @click="publishArtcile()" type='primary'>发布</el-button>
                 <!-- true为草稿模式 -->
               <el-button @click="publishArtcile(true)">进入草稿</el-button>
