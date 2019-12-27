@@ -27,7 +27,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- //放置一个封面图片 -->
-      <cover-img :list="formData.cover.images"></cover-img>
+      <cover-img @click='receiveImg' :list="formData.cover.images"></cover-img>
 
       <el-form-item prop="channel_id" label="频道">
         <el-select v-model="formData.channel_id">
@@ -106,6 +106,22 @@ export default {
     // }
   },
   methods: {
+    receiveImg (url, index) {
+      debugger
+      // alert('又接到' + url)
+      // 接收到数据 修改数据
+      // 不能用 因为要被vue监控
+      // this.formData.cover.images[index] = url
+      // 新数组赋给原数组
+      // 数组变成新数组 会触发响应式视图更新
+      // this.formData.cover.images = this.formData.cover.images.map(function (item, i) {
+      //   if (i === index) {
+      //     return url
+      //   }
+      //   return item
+      // })
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+    },
 
     // 切换时才会触发
     changeType () {

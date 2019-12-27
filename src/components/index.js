@@ -17,6 +17,8 @@ import 'quill/dist/quill.bubble.css'
 // 引入image
 import coverImg from './publish/cover-image'
 
+import selectImg from './publish/select-image'
+
 export default {
   install (Vue) {
     Vue.component('layout-aside', layoutAside)
@@ -24,5 +26,6 @@ export default {
     Vue.component('bread-crumb', breadCrumb)
     Vue.component('quill-editor', quillEditor)// 全局注册富文本编辑器
     Vue.component('cover-img', coverImg) // 注册一个封面组件
+    Vue.component('select-img', selectImg)
   }
 }
