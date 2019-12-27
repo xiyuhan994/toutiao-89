@@ -25,8 +25,10 @@
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
-        {{formData.cover}}
       </el-form-item>
+      <!-- //放置一个封面图片 -->
+      <cover-img :list='formData.cover.images'> </cover-img>
+
       <el-form-item prop="channel_id" label="频道">
         <el-select v-model="formData.channel_id">
           <!-- //label显示值 -->
