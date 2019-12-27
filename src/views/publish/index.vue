@@ -14,10 +14,10 @@
       <el-form-item prop="title" label="标题">
         <el-input v-model="formData.title" style="width:60%"></el-input>
       </el-form-item>
-      <el-form-item prop="content" label="内容">
-        <el-input v-model="formData.content" type="textarea" :rows="4"></el-input>
+      <el-form-item prop="content" label="内容" >
+       <quill-editor  v-model="formData.content" style="height:400px"></quill-editor>
       </el-form-item>
-      <el-form-item prop="type" label="封面">
+      <el-form-item prop="type" label="封面" style="margin-top:100px">
         <!-- 单选组 -->
         <el-radio-group v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
@@ -25,6 +25,7 @@
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
+        {{formData.cover}}
       </el-form-item>
       <el-form-item prop="channel_id" label="频道">
         <el-select v-model="formData.channel_id">
@@ -75,10 +76,11 @@ export default {
   watch: {
     $route: function (to, from) {
     // to里又params
-      console.log(to)
-      console.log(from)
+      // console.log(to)
+      // console.log(from)
       if (Object.keys(to.params).length) {
       // 有参数修改
+        this.getArticleByid(to.params.articleId)
       } else {
       // 没有参数是原始
         this.formData = this.formData = {
@@ -89,6 +91,15 @@ export default {
             type: 0 // 封面类型
           }
         }
+      }
+    },
+    'formData.cover.type': function () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) { // 单图
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) { // 三图
+        this.formData.cover.images = ['', '', '']
       }
     }
   },
@@ -170,5 +181,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
 </style>
