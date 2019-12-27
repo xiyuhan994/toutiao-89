@@ -14,12 +14,12 @@
       <el-form-item prop="title" label="标题">
         <el-input v-model="formData.title" style="width:60%"></el-input>
       </el-form-item>
-      <el-form-item prop="content" label="内容" >
-       <quill-editor  v-model="formData.content" style="height:400px"></quill-editor>
+      <el-form-item prop="content" label="内容">
+        <quill-editor v-model="formData.content" style="height:400px"></quill-editor>
       </el-form-item>
       <el-form-item prop="type" label="封面" style="margin-top:100px">
         <!-- 单选组 -->
-        <el-radio-group v-model="formData.cover.type">
+        <el-radio-group @change="changeType" v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
@@ -27,7 +27,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- //放置一个封面图片 -->
-      <cover-img :list='formData.cover.images'> </cover-img>
+      <cover-img :list="formData.cover.images"></cover-img>
 
       <el-form-item prop="channel_id" label="频道">
         <el-select v-model="formData.channel_id">
@@ -94,8 +94,21 @@ export default {
           }
         }
       }
-    },
-    'formData.cover.type': function () {
+    }
+    // 'formData.cover.type': function () {
+    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+    //     this.formData.cover.images = []
+    //   } else if (this.formData.cover.type === 1) { // 单图
+    //     this.formData.cover.images = ['']
+    //   } else if (this.formData.cover.type === 3) { // 三图
+    //     this.formData.cover.images = ['', '', '']
+    //   }
+    // }
+  },
+  methods: {
+
+    // 切换时才会触发
+    changeType () {
       if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
         this.formData.cover.images = []
       } else if (this.formData.cover.type === 1) { // 单图
@@ -103,9 +116,7 @@ export default {
       } else if (this.formData.cover.type === 3) { // 三图
         this.formData.cover.images = ['', '', '']
       }
-    }
-  },
-  methods: {
+    },
 
     // 获取文章详情通过id
     getArticleByid (articleId) {
@@ -184,5 +195,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
