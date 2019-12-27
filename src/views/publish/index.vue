@@ -64,6 +64,28 @@ export default {
       }
     }
   },
+  // 监视 router
+  // watch 指向对象实例
+  watch: {
+    $route: function (to, from) {
+    // to里又params
+      console.log(to)
+      console.log(from)
+      if (Object.keys(to.params).length) {
+      // 有参数修改
+      } else {
+      // 没有参数是原始
+        this.formData = this.formData = {
+          title: '', // 标题
+          content: '', // 内容
+          cover: {
+            images: [], // 存图片
+            type: 0 // 封面类型
+          }
+        }
+      }
+    }
+  },
   methods: {
     // 获取频道
     getChannels () {

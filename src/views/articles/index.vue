@@ -94,7 +94,7 @@
       <!-- 右边部分 -->
       <el-col :span="4">
         <el-row type="flex" justify="end">
-          <span class="del">
+          <span @click="toModify(item.id)" class="del">
             <i class="el-icon-edit"></i>
             修改
           </span>
@@ -180,6 +180,10 @@ export default {
   },
 
   methods: {
+    // 修改
+    toModify (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
 
     // 删除评论
     delArticle (id) {
