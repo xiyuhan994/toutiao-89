@@ -21,7 +21,7 @@
           <el-input v-model="formData.email" style="width:30%"></el-input>
         </el-form-item>
         <el-form-item  disabled label='手机号'>
-          <el-input  v-model="formData.mobile" style="width:30%"></el-input>
+          <el-input disabled  v-model="formData.mobile" style="width:30%"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="updateUserInfo">保存信息</el-button>
@@ -32,6 +32,9 @@
 </template>
 
 <script>
+// 引入公共事件
+import eventBus from '../../util/eventBus'
+
 export default {
   data () {
     return {
@@ -75,6 +78,8 @@ export default {
       }).then(res => {
         // 设置头像地址
         this.formData.photo = res.data.photo
+        // 触发事件
+        eventBus.$emit('getUserInfo')
         this.loading = false // 关闭弹层
       })
     },
@@ -88,7 +93,7 @@ export default {
 
           this.$axios({
             url: '/user/profile',
-            method: 'PATCH',
+            method: 'patch',
             data: this.formData
           }).then(res => {
             // 保存成功
@@ -96,6 +101,7 @@ export default {
               type: 'success',
               message: '保存信息成功'
             })
+            eventBus.$emit('getUserInfo')
           })
         }
       })

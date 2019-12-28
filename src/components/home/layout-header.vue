@@ -28,6 +28,9 @@
 </template>
 
 <script>
+// 引入公共事件
+import eventBus from '../../util/eventBus'
+
 export default {
   data: function () {
     return {
@@ -37,15 +40,23 @@ export default {
     }
   },
   created () {
-    // 查询数据
-    this.$axios({
-      url: '/user/profile'
-    }).then(res => {
-      // 获取个人信息
-      this.userInfo = res.data
+    // 更新数据
+    this.getCount()
+    eventBus.$on('getUserInfo', () => {
+      this.getCount()
     })
   },
   methods: {
+    // 查询数据
+    getCount () {
+      this.$axios({
+        url: '/user/profile'
+      }).then(res => {
+      // 获取个人信息
+        this.userInfo = res.data
+      })
+    },
+
     handleCommand (a) {
       if (a === 'exit') {
         //   清除用户的令牌
