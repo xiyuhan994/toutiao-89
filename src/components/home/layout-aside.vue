@@ -34,7 +34,7 @@
       </el-submenu>
 
       <!-- 一级路由 -->
-      <el-menu-item style="margin:20px">账户信息</el-menu-item>
+      <el-menu-item style="margin:20px" index='/home/account'>账户信息</el-menu-item>
     </el-menu>
   </div>
 </template>
