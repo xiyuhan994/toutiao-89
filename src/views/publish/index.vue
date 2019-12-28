@@ -27,7 +27,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- //放置一个封面图片 -->
-      <cover-img @click='receiveImg' :list="formData.cover.images"></cover-img>
+      <cover-img @selectOneImg='receiveImg' :list="formData.cover.images"></cover-img>
 
       <el-form-item prop="channel_id" label="频道">
         <el-select v-model="formData.channel_id">
@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     receiveImg (url, index) {
-      debugger
       // alert('又接到' + url)
       // 接收到数据 修改数据
       // 不能用 因为要被vue监控
