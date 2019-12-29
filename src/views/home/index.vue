@@ -1,8 +1,8 @@
 <template>
   <el-container>
     <!-- 左侧边栏 -->
-    <el-aside style=" background-color:#353b4e;min-height:100vh">
-      <layout-aside></layout-aside>
+    <el-aside :style="{width:collaspse? '60px':'230px'}" style=" backgroundColor:#323745;min-height:100vh">
+      <layout-aside :collapse='collaspse'></layout-aside>
     </el-aside>
     <!-- 右侧边栏 -->
     <el-container>
@@ -19,9 +19,20 @@
 </template>
 
 <script>
+import eventBus from '../../util/eventBus'
 
 export default {
-
+  data () {
+    return {
+      // 是否折叠
+      collaspse: false
+    }
+  },
+  created () {
+    eventBus.$on('changecoll', () => {
+      this.collaspse = !this.collaspse
+    })
+  }
 }
 </script>
 

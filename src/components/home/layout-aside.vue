@@ -1,32 +1,46 @@
 <template>
   <div>
     <div class="img">
-      <img src="../../assets/img/logo_admin.png" alt />
+      <img :src="collapse?defaultImgSmall:defaultImg" alt />
     </div>
 
     <el-menu
       router
-      background-color=" #323745"
-      text-color=" #adafb5"
+      background-color="#323745"
+      text-color="#adafb5"
       active-text-color="#ffd04b"
       style="border-right:none"
+      :collapse="collapse"
+      :style="{width:collapse? '60px':'230px;'}"
     >
       <!-- 一级路由 -->
-      <el-menu-item style="margin:20px" index='/home'>首页</el-menu-item>
+      <el-menu-item style="margin-top:20px" index="/home">
+        <i class="el-icon-s-home"></i>
+        <span>首页</span>
+      </el-menu-item>
 
       <!-- 二级路由 -->
 
       <el-submenu index="1">
-        <span slot="title" style="margin:20px" index='title'>内容管理</span>
+
+        <template slot="title">
+          <i class="el-icon-document"></i>
+          <span>内容管理</span>
+        </template>
+
         <el-menu-item index="/home/publish">发布文章</el-menu-item>
         <el-menu-item index="/home/articles">内容列表</el-menu-item>
         <el-menu-item index="/home/comment">评论列表</el-menu-item>
         <el-menu-item index="/home/material">素材管理</el-menu-item>
+
       </el-submenu>
 
       <!-- 二级路由 -->
       <el-submenu index="2">
-        <span slot="title" style="margin:20px">粉丝管理</span>
+        <template slot="title">
+          <i class="el-icon-s-custom"></i>
+          <span>粉丝管理</span>
+        </template>
         <el-menu-item index="/home/picture">图文数据</el-menu-item>
         <el-menu-item index="/home/fansinfo">粉丝概况</el-menu-item>
         <el-menu-item index="/home/fanslife">粉丝画像</el-menu-item>
@@ -34,13 +48,27 @@
       </el-submenu>
 
       <!-- 一级路由 -->
-      <el-menu-item style="margin:20px" index='/home/account'>账户信息</el-menu-item>
+      <el-menu-item index="/home/account">
+        <i class="el-icon-s-tools"></i>
+        <span>账户信息</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script>
-export default {}
+// import eventBus from '../../util/eventBus'
+export default {
+  props: ['collapse'],
+  data () {
+    return {
+      defaultImg: require('../../assets/img/logo_admin.png'),
+      defaultImgSmall: require('../../assets/img/toutiao.png')
+    }
+  },
+
+  methods: {}
+}
 </script>
 
 <style lang='less' scoped>
@@ -48,8 +76,9 @@ export default {}
   background-color: #2e2f32;
   text-align: center;
   padding: 10px 0;
+  height: 60px;
   img {
-    width: 120px;
+   height: 40px;
   }
 }
 

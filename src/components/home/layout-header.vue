@@ -2,7 +2,7 @@
   <el-row class="layout-header" type="flex" align="middle" justify="space-between">
     <!-- 左侧 -->
     <el-col :span="6" class="left">
-      <i class="el-icon-s-unfold"></i>
+      <i  @click="changeCollapse"  :class="{'el-icon-s-unfold':collapse,' el-icon-s-fold':!collapse}"></i>
       <span style="margin-left:5px;font-size:16px">江苏传智播客教育科技股份有限公司</span>
     </el-col>
 
@@ -34,6 +34,8 @@ import eventBus from '../../util/eventBus'
 export default {
   data: function () {
     return {
+      // 折叠状态
+      collapse: false,
       // 创建一个空对象准备存放值
       userInfo: {},
       defaultImg: require('../../assets/img/header.jpg')
@@ -47,6 +49,14 @@ export default {
     })
   },
   methods: {
+    // 折叠状态
+    changeCollapse () {
+      // 折叠取反
+      this.collapse = !this.collapse
+      // 通知要改变宽度的组件
+      eventBus.$emit('changecoll')
+    },
+
     // 查询数据
     getCount () {
       this.$axios({
@@ -76,7 +86,13 @@ export default {
 }
 .el-icon-s-unfold {
   margin-left: 20px;
-  font-size: 18px;
+  font-size: 23px;
+  /* margin-top: 25px; */
+}
+
+.el-icon-s-fold {
+  margin-left: 20px;
+  font-size: 23px;
   /* margin-top: 25px; */
 }
 img {
